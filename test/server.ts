@@ -16,11 +16,6 @@ function handler(req: http.IncomingMessage, res: http.ServerResponse) {
             res.writeHead(200, { 'Content-Type': 'text/plain' })
             res.end('okay')
         }, 3000)
-    } else if (req.url === '/tooslow') {
-        setTimeout(() => {
-            res.writeHead(200, { 'Content-Type': 'text/plain' })
-            res.end('okay')
-        }, 30000).unref()
     } else {
         debug('Unknown url ' + req.url)
         process.exit(1)

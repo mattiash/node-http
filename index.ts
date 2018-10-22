@@ -50,7 +50,7 @@ export class HttpServer extends http.Server {
         })
     }
 
-    async shutdownAsync(timeout: number = 5000): Promise<void> {
+    async shutdownAsync(): Promise<void> {
         this.isShuttingDown = true
         // Close server to deny any new connections
         let closingPromise = new Promise(resolve => this.close(() => resolve()))
@@ -65,13 +65,6 @@ export class HttpServer extends http.Server {
                 this.idleSocketMap.delete(socket)
             }
         })
-
-        setTimeout(() => {
-            this.idleSocketMap.forEach((_isIdle, socket) => {
-                debug('Closing non-idle socket after timeout')
-                destroy(socket)
-            })
-        }, timeout).unref()
 
         await closingPromise
 
