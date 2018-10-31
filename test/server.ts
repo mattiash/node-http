@@ -3,6 +3,8 @@ import * as dbg from 'debug'
 const debug = dbg('http')
 
 import * as http from 'http'
+import { createHttpsServer } from '../lib/https'
+import { readFileSync } from 'fs'
 
 const protocol = process.argv[2]
 
@@ -11,6 +13,7 @@ function handler(req: http.IncomingMessage, res: http.ServerResponse) {
         res.writeHead(200, { 'Content-Type': 'text/plain' })
         res.end('okay')
     } else if (req.url === '/slow') {
+        console.log('Slow request received')
         setTimeout(() => {
             console.log('Slow request done')
             res.writeHead(200, { 'Content-Type': 'text/plain' })
@@ -22,7 +25,18 @@ function handler(req: http.IncomingMessage, res: http.ServerResponse) {
     }
 }
 
-const srv = createHttpServer(handler)
+const srv =
+    protocol === 'http'
+        ? createHttpServer(handler)
+        : createHttpsServer(
+              {
+                  key: readFileSync('./server.key'),
+                  cert: readFileSync('./server.crt'),
+                  requestCert: false,
+                  rejectUnauthorized: false
+              },
+              handler
+          )
 
 async function run() {
     let address = await srv.listenAsync()
