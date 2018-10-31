@@ -71,7 +71,7 @@ export class HttpsServer extends base.Server {
     }
 
     onRequest(req: http.IncomingMessage, res: http.ServerResponse) {
-        let socket = req.socket
+        let socket = (req.socket as any)._parent as Socket
         this.idleSocketMap.set(socket, false)
 
         res.on('finish', () => {
@@ -106,5 +106,5 @@ export function createHttpsServer(
 function destroy(socket: Socket) {
     // Undocumented method that calls end() and then destroy
     // now or when the socket has written all its data.
-    setTimeout(() => (socket as any).destroySoon(), 500)
+    ;(socket as any).destroySoon()
 }
