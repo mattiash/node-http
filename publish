@@ -23,7 +23,7 @@ rm *.tgz
 echo "Do you want to publish this?"
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) npm publish; break;;
+        Yes ) npm publish --access public; break;;
         No ) exit;;
     esac
 done
