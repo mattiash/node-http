@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "multi-tape ./test/test-*.js",
+        "test-travis": "tsc && nyc --reporter lcov multi-tape -o -p 4 test/test-*.js",
         "lint": "prettier --list-different \"{,**/**}*.ts\" && tslint -t stylish -p tsconfig.json",
         "prepare": "tsc"
     },
@@ -19,10 +20,13 @@
     "devDependencies": {
         "@types/got": "^8.3.4",
         "@types/node": "^10.12.0",
+        "coveralls": "^3.0.2",
         "got": "^9.2.2",
         "multi-tape": "^1.2.1",
+        "nyc": "^13.1.0",
         "prettier": "^1.14.3",
         "purple-tape": "^2.0.1",
+        "source-map-support": "^0.5.9",
         "tslint": "^5.11.0",
         "typescript": "^3.1.3"
     }

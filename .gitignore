@@ -1,4 +1,7 @@
 *.js
+*.js.tap
+coverage
+.nyc_output
 *.d.ts
 node_modules
 package-lock.json

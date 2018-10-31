@@ -1,5 +1,7 @@
 # @mattiash/http
 
+[![Build Status](https://travis-ci.org/mattiash/node-http.svg?branch=master)](https://travis-ci.org/mattiash/node-http) [![Coverage Status](https://coveralls.io/repos/github/mattiash/node-http/badge.svg?branch=master)](https://coveralls.io/github/mattiash/node-http?branch=master)
+
 Opinionated http(s) server.
 
 This module implements an http/https-server that behaves the way I think it should behave:

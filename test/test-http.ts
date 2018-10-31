@@ -1,3 +1,4 @@
+import 'source-map-support/register'
 import { Agent } from 'http'
 import { tests } from './common'
 

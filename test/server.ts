@@ -1,3 +1,4 @@
+import 'source-map-support/register'
 import { createHttpServer, createHttpsServer } from '../index'
 import * as http from 'http'
 import {} from '../lib/https'

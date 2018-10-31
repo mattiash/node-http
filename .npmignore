@@ -1,4 +1,5 @@
 .prettier*
+.travis.yml
 tslint.json
 tsconfig.json
 publish
