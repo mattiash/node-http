@@ -1,0 +1,7 @@
+.prettier*
+tslint.json
+tsconfig.json
+publish
+test
+*.ts
+!*.d.ts

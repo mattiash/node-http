@@ -2,6 +2,8 @@ import * as test from 'purple-tape'
 import * as got from 'got'
 import { startServer, stopServer, sleep } from './runner'
 
+// tslint:disable no-console
+
 export function tests(protocol: string, createAgent: () => any) {
     test('close after quick request', async t => {
         let agent = createAgent()

@@ -1,10 +1,9 @@
-import { createHttpServer } from '../index'
-import * as dbg from 'debug'
-const debug = dbg('http')
-
+import { createHttpServer, createHttpsServer } from '../index'
 import * as http from 'http'
-import { createHttpsServer } from '../lib/https'
+import {} from '../lib/https'
 import { readFileSync } from 'fs'
+
+// tslint:disable no-console
 
 const protocol = process.argv[2]
 
@@ -20,7 +19,6 @@ function handler(req: http.IncomingMessage, res: http.ServerResponse) {
             res.end('okay')
         }, 3000)
     } else {
-        debug('Unknown url ' + req.url)
         process.exit(1)
     }
 }
@@ -42,10 +40,9 @@ async function run() {
     let address = await srv.listenAsync()
     console.log(`Listening on ${protocol}://127.0.0.1:${address.port}`)
     process.on('SIGTERM', async () => {
-        debug('Will shut down server')
         await srv.shutdownAsync()
         console.log('Server has been shut down')
     })
 }
 
-run()
+run().catch(err => console.log(err))

@@ -1,8 +1,6 @@
 import * as base from 'https'
 import * as http from 'http'
 import { AddressInfo, Socket } from 'net'
-import * as dbg from 'debug'
-const debug = dbg('https')
 
 export class HttpsServer extends base.Server {
     private isShuttingDown = false
@@ -56,12 +54,9 @@ export class HttpsServer extends base.Server {
         // Close server to deny any new connections
         let closingPromise = new Promise(resolve => this.close(() => resolve()))
 
-        debug('No longer listening')
-
         // Close all idle connections
         this.idleSocketMap.forEach((isIdle, socket) => {
             if (isIdle) {
-                debug('Closing idle socket')
                 destroy(socket)
                 this.idleSocketMap.delete(socket)
             }

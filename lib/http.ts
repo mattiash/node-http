@@ -1,8 +1,6 @@
 import * as base from 'http'
 import * as http from 'http'
 import { AddressInfo, Socket } from 'net'
-// import * as dbg from 'debug'
-// const debug = dbg('http')
 
 export class HttpServer extends base.Server {
     private isShuttingDown = false
@@ -56,12 +54,9 @@ export class HttpServer extends base.Server {
         // Close server to deny any new connections
         let closingPromise = new Promise(resolve => this.close(() => resolve()))
 
-        console.log('No longer listening')
-
         // Close all idle connections
         this.idleSocketMap.forEach((isIdle, socket) => {
             if (isIdle) {
-                console.log('Closing idle socket')
                 destroy(socket)
                 this.idleSocketMap.delete(socket)
             }
@@ -77,7 +72,6 @@ export class HttpServer extends base.Server {
         res.on('finish', () => {
             this.idleSocketMap.set(socket, true)
             if (this.isShuttingDown) {
-                console.log('Destroying socket after finished response')
                 destroy(socket)
                 this.idleSocketMap.delete(socket)
             }

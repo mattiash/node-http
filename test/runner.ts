@@ -1,6 +1,8 @@
 import { spawn, ChildProcess, SpawnOptions } from 'child_process'
 import { ReadLine, createInterface } from 'readline'
 
+// tslint:disable no-console
+
 export class Runner {
     private child!: ChildProcess
     private stdout!: ReadLine
@@ -41,8 +43,6 @@ export class Runner {
         })
 
         this.child.on('exit', (code: number, signal: string) => {
-            // This handler is here for debugging. I suspect that sometimes
-            // the child exits but the 'close' event does not fire.
             if (signal) {
                 console.log(
                     'child exit event due to receipt of signal ' + signal
