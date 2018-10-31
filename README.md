@@ -1,10 +1,63 @@
 # Graceful http server
 
+This module implements an http/https-server that behaves the way I think it should behave:
+
 1. Allow use of persistent connections
-2. listen() returns a promise that resolves with AddressInfo when the server is listening.
-3. close() stops listening for new connections immediately
-4. close() closes all idle persistent connections immediately
-5. close() closes all non-idle connections as soon as the response to the
+2. listenAsync() returns a promise that resolves with AddressInfo when the server is listening.
+3. closeAsync() stops listening for new connections immediately
+4. closeAsync() closes all idle persistent connections immediately
+5. closeAsync() closes all non-idle connections as soon as the response to the
    current request has been sent.
-6. close() returns a promise that resolves when all connections have been closed
+6. closeAsync() returns a promise that resolves when all connections have been closed
 7. Works for http as well as https
+8. Has type-definitions for typescript.
+9. Has tests that check that it actually closes persistent connections correctly.
+
+## API
+
+The module exports two functions, `createHttpServer` and `createHttpsServer`.
+
+### createHttpServer
+
+Takes a requestListener argument that is passed unmodified to node's [http.createServer](https://nodejs.org/api/http.html#http_http_createserver_options_requestlistener).
+Returns an an object that inherits from node's [http.Server](https://nodejs.org/api/http.html#http_class_http_server)
+and extends it with the following two methods:
+
+#### listenAsync
+
+Starts listening for new connections.
+Takes the same arguments as http.Server.listen.
+Returns a promise that resolves with the result of http.Server.address()
+when the server is actually listening.
+
+#### closeAsync()
+
+Closes the server as described above.
+Returns a promise that resolves when the server has stopped listening
+and all persistent connections have been closed.
+
+### createHttpsServer
+
+Same as createHttpServer but for https.
+
+## Example
+
+```typescript
+import { createHttpServer } from 'graceful-http-server'
+
+let srv = createHttpServer((_req, res) => {
+    res.writeHead(200)
+    res.end('okay')
+})
+
+async function run() {
+    let address = await srv.listenAsync()
+    console.log(`Listening on port ${address.port}`)
+    process.on('SIGINT', async () => {
+        await srv.shutdownAsync()
+        console.log('Server has been shut down')
+    })
+}
+
+run()
+```
