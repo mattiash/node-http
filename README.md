@@ -1,4 +1,6 @@
-# Graceful http server
+# @mattiash/http
+
+Opinionated http(s) server.
 
 This module implements an http/https-server that behaves the way I think it should behave:
 
