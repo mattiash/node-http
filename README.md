@@ -45,7 +45,7 @@ Same as createHttpServer but for https.
 ## Example
 
 ```typescript
-import { createHttpServer } from 'graceful-http-server'
+import { createHttpServer } from '@mattiash/http'
 
 let srv = createHttpServer((_req, res) => {
     res.writeHead(200)
