@@ -1,6 +1,6 @@
 # @mattiash/http
 
-[![Build Status](https://travis-ci.org/mattiash/node-http.svg?branch=master)](https://travis-ci.org/mattiash/node-http) [![Coverage Status](https://coveralls.io/repos/github/mattiash/node-http/badge.svg?branch=master)](https://coveralls.io/github/mattiash/node-http?branch=master)
+[![NPM Version](https://img.shields.io/npm/v/@mattiash/http.svg)](https://www.npmjs.com/package/@mattiash/http) [![Build Status](https://travis-ci.org/mattiash/node-http.svg?branch=master)](https://travis-ci.org/mattiash/node-http) [![Coverage Status](https://coveralls.io/repos/github/mattiash/node-http/badge.svg?branch=master)](https://coveralls.io/github/mattiash/node-http?branch=master)
 
 Opinionated http(s) server.
 
