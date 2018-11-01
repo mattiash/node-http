@@ -13,6 +13,18 @@ function createAgent() {
 
 tests('http', createAgent)
 
+test('close()', async t => {
+    let server = createHttpServer(() => {})
+
+    await server.listenAsync()
+    await new Promise(resolve => {
+        server.close((err?: Error) => {
+            t.ok(!err, 'shall call close-callback without an error')
+            resolve()
+        })
+    })
+})
+
 test('close without listening', async t => {
     let server = createHttpServer(() => {})
 
@@ -22,4 +34,13 @@ test('close without listening', async t => {
     } catch (e) {
         t.pass('shall throw an error')
     }
+
+    server = createHttpServer(() => {})
+
+    await new Promise(resolve => {
+        server.close((err?: Error) => {
+            t.ok(err, 'shall call close-callback with an error')
+            resolve()
+        })
+    })
 })

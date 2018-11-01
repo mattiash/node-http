@@ -3,8 +3,8 @@ import * as http from 'http'
 import { AddressInfo, Socket } from 'net'
 
 export class HttpServer extends base.Server {
-    private isShuttingDown = false
-    private idleSocketMap = new Map<Socket, boolean>()
+    private isShuttingDown!: boolean
+    private idleSocketMap!: Map<Socket, boolean>
 
     private static addMethod(server: HttpServer, name: keyof HttpServer) {
         server[name] = HttpServer.prototype[name]
