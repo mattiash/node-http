@@ -8,11 +8,11 @@ This module implements an http/https-server that behaves the way I think it shou
 
 1. Allow use of persistent connections
 2. listenAsync() returns a promise that resolves with AddressInfo when the server is listening.
-3. closeAsync() stops listening for new connections immediately
-4. closeAsync() closes all idle persistent connections immediately
-5. closeAsync() closes all non-idle connections as soon as the response to the
+3. close() stops listening for new connections immediately
+4. close() closes all idle persistent connections immediately
+5. close() closes all non-idle connections as soon as the response to the
    current request has been sent.
-6. closeAsync() returns a promise that resolves when all connections have been closed
+6. closeAsync() does the same thing as close and returns a promise that resolves when all connections have been closed
 7. Works for http as well as https
 8. Has type-definitions for typescript.
 9. Has tests that check that it actually closes persistent connections correctly.
@@ -58,7 +58,7 @@ async function run() {
     let address = await srv.listenAsync()
     console.log(`Listening on port ${address.port}`)
     process.on('SIGINT', async () => {
-        await srv.shutdownAsync()
+        await srv.closeAsync()
         console.log('Server has been shut down')
     })
 }

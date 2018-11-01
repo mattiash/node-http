@@ -41,7 +41,7 @@ async function run() {
     let address = await srv.listenAsync()
     console.log(`Listening on ${protocol}://127.0.0.1:${address.port}`)
     process.on('SIGTERM', async () => {
-        await srv.shutdownAsync()
+        await srv.closeAsync()
         console.log('Server has been shut down')
     })
 }

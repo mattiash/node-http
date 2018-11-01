@@ -16,7 +16,8 @@ export class HttpsServer extends base.Server {
         server.isShuttingDown = false
 
         HttpsServer.addMethod(server, 'listenAsync')
-        HttpsServer.addMethod(server, 'shutdownAsync')
+        HttpsServer.addMethod(server, 'closeAsync')
+        HttpsServer.addMethod(server, 'close')
         HttpsServer.addMethod(server, 'onConnection')
         HttpsServer.addMethod(server, 'onRequest')
 
@@ -49,10 +50,19 @@ export class HttpsServer extends base.Server {
         })
     }
 
-    async shutdownAsync(): Promise<void> {
+    close(callback?: Function) {
+        this.closeAsync()
+            .then(() => (callback ? callback() : undefined))
+            .catch((err: Error) => (callback ? callback(err) : undefined))
+        return this
+    }
+
+    async closeAsync(): Promise<void> {
         this.isShuttingDown = true
         // Close server to deny any new connections
-        let closingPromise = new Promise(resolve => this.close(() => resolve()))
+        let closingPromise = new Promise((resolve, reject) =>
+            super.close((err: Error) => (err ? reject(err) : resolve()))
+        )
 
         // Close all idle connections
         this.idleSocketMap.forEach((isIdle, socket) => {
