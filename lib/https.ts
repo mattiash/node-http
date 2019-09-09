@@ -6,7 +6,7 @@ export class HttpsServer extends base.Server {
     private isShuttingDown!: boolean
     private idleSocketMap!: Map<Socket, boolean>
 
-    private static addMethod(server: HttpsServer, name: keyof HttpsServer) {
+    private static addMethod(server: any, name: keyof HttpsServer) {
         server[name] = HttpsServer.prototype[name]
     }
 
@@ -61,7 +61,9 @@ export class HttpsServer extends base.Server {
         this.isShuttingDown = true
         // Close server to deny any new connections
         let closingPromise = new Promise((resolve, reject) =>
-            super.close((err: Error) => (err ? reject(err) : resolve()))
+            super.close((err: Error | undefined) =>
+                err ? reject(err) : resolve()
+            )
         )
 
         // Close all idle connections
