@@ -1,6 +1,6 @@
 import 'source-map-support/register'
 import { Agent } from 'http'
-import { tests } from './common'
+import { tests } from './common-http1'
 import * as test from 'purple-tape'
 import { createHttpServer } from '..'
 

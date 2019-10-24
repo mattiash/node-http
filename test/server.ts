@@ -13,55 +13,46 @@ import { readFileSync } from 'fs'
 
 const protocol = process.argv[2]
 
-function handler(req: http.IncomingMessage, res: http.ServerResponse) {
-    if (req.url === '/quick') {
-        res.writeHead(200, { 'Content-Type': 'text/plain' })
-        res.end('okay')
-    } else if (req.url === '/slow') {
-        console.log('Slow request received')
-        setTimeout(() => {
-            console.log('Slow request done')
-            res.writeHead(200, { 'Content-Type': 'text/plain' })
-            res.end('okay')
-        }, 3000)
-    } else {
-        process.exit(1)
-    }
-}
-
-function handler2(
-    req: http2.Http2ServerRequest,
-    res: http2.Http2ServerResponse
+function handler(
+    req: http.IncomingMessage | http2.Http2ServerRequest,
+    res: http.ServerResponse | http2.Http2ServerResponse
 ) {
     if (req.url === '/quick') {
         res.writeHead(200, { 'Content-Type': 'text/plain' })
-        res.end('okay')
+        res.end('okay' as any)
     } else if (req.url === '/slow') {
         console.log('Slow request received')
         setTimeout(() => {
             console.log('Slow request done')
             res.writeHead(200, { 'Content-Type': 'text/plain' })
-            res.end('okay')
+            res.end('okay' as any)
         }, 3000)
     } else {
         process.exit(1)
     }
 }
 
-const srv =
-    protocol === 'http'
-        ? createHttpServer(handler)
-        : protocol === 'https'
-        ? createHttpsServer(
-              {
-                  key: readFileSync('./server.key'),
-                  cert: readFileSync('./server.crt'),
-                  requestCert: false,
-                  rejectUnauthorized: false
-              },
-              handler
-          )
-        : createHttp2Server({}, handler2)
+function createServer() {
+    switch (protocol) {
+        case 'http':
+            return createHttpServer(handler)
+        case 'https':
+            return createHttpsServer(
+                {
+                    key: readFileSync('./server.key'),
+                    cert: readFileSync('./server.crt'),
+                    requestCert: false,
+                    rejectUnauthorized: false
+                },
+                handler
+            )
+        case 'http2':
+            return createHttp2Server({}, handler)
+        default:
+            throw new Error('Unknown protocol ' + protocol)
+    }
+}
+const srv = createServer()
 
 async function run() {
     let address = await srv.listenAsync()

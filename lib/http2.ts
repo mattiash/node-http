@@ -70,11 +70,9 @@ export class Http2Server extends net.Server implements base.Http2Server {
     }
 
     onSession(session: base.Http2Session) {
-        console.log('onSession')
         this.sessions.add(session)
 
         session.on('close', () => {
-            console.log('Session closed')
             this.sessions.delete(session)
         })
     }
