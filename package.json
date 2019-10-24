@@ -18,10 +18,10 @@
     "license": "ISC",
     "dependencies": {},
     "devDependencies": {
-        "@types/got": "^8.3.4",
+        "@types/got": "^9.6.7",
         "@types/node": "^10.12.0",
         "coveralls": "^3.0.2",
-        "got": "^9.2.2",
+        "got": "^9.6.0",
         "multi-tape": "^1.2.1",
         "nyc": "^13.1.0",
         "prettier": "^1.14.3",
