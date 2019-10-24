@@ -78,17 +78,6 @@ export class Http2Server extends net.Server implements base.Http2Server {
     }
 }
 
-// export function createHttp2SecureServer(
-//     options: base.SecureServerOptions,
-//     requestListener?: (
-//         request: base.Http2ServerRequest,
-//         response: base.Http2ServerResponse
-//     ) => void
-// ): Http2SecureServer {
-//     let server = base.createSecureServer(options, requestListener)
-//     return Http2Server.decorateServer(server)
-// }
-
 export function createHttp2Server(
     options: base.ServerOptions,
     requestListener?: (
