@@ -3,7 +3,7 @@ import * as test from 'purple-tape'
 import * as http2 from 'http2'
 import { URL } from 'url'
 
-import { createHttp2Server } from '..'
+import { createHttp2SecureServer } from '..'
 import { startServer, stopServer, sleep } from './runner'
 
 // tslint:disable no-console
@@ -11,7 +11,9 @@ import { startServer, stopServer, sleep } from './runner'
 function request(targetUrl: string): Promise<string> {
     return new Promise(resolve => {
         const u = new URL(targetUrl)
-        const session = http2.connect(u.origin)
+        const session = http2.connect(u.origin, {
+            rejectUnauthorized: false
+        })
         session.on('error', err => console.error(err))
         session.on('close', () => console.log('client session closed'))
         const req = session.request({ ':path': u.pathname })
@@ -28,7 +30,8 @@ function request(targetUrl: string): Promise<string> {
         req.end()
     })
 }
-const protocol = 'http2'
+
+const protocol = 'http2-secure'
 
 test('close after quick request', async t => {
     let server = await startServer('./server.js', protocol)
@@ -78,7 +81,7 @@ test('close after request finished', async t => {
 })
 
 test('close()', async t => {
-    let server = createHttp2Server({}, () => {})
+    let server = createHttp2SecureServer({}, () => {})
 
     await server.listenAsync()
     await new Promise(resolve => {
@@ -90,7 +93,7 @@ test('close()', async t => {
 })
 
 test('close without listening', async t => {
-    let server = createHttp2Server({}, () => {})
+    let server = createHttp2SecureServer({}, () => {})
 
     try {
         await server.closeAsync()
@@ -99,7 +102,7 @@ test('close without listening', async t => {
         t.pass('shall throw an error')
     }
 
-    server = createHttp2Server({}, () => {})
+    server = createHttp2SecureServer({}, () => {})
 
     await new Promise(resolve => {
         server.close((err?: Error) => {

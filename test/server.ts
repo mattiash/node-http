@@ -2,7 +2,8 @@ import 'source-map-support/register'
 import {
     createHttpServer,
     createHttpsServer,
-    createHttp2Server
+    createHttp2Server,
+    createHttp2SecureServer
 } from '../index'
 import * as http from 'http'
 import * as http2 from 'http2'
@@ -11,7 +12,11 @@ import { readFileSync } from 'fs'
 
 // tslint:disable no-console
 
-const protocol = process.argv[2]
+const protocol = process.argv[2] as
+    | 'http'
+    | 'https'
+    | 'http2-insecure'
+    | 'http2-secure'
 
 function handler(
     req: http.IncomingMessage | http2.Http2ServerRequest,
@@ -40,14 +45,20 @@ function createServer() {
             return createHttpsServer(
                 {
                     key: readFileSync('./server.key'),
-                    cert: readFileSync('./server.crt'),
-                    requestCert: false,
-                    rejectUnauthorized: false
+                    cert: readFileSync('./server.crt')
                 },
                 handler
             )
-        case 'http2':
+        case 'http2-insecure':
             return createHttp2Server({}, handler)
+        case 'http2-secure':
+            return createHttp2SecureServer(
+                {
+                    key: readFileSync('./server.key'),
+                    cert: readFileSync('./server.crt')
+                },
+                handler
+            )
         default:
             throw new Error('Unknown protocol ' + protocol)
     }
@@ -56,11 +67,14 @@ const srv = createServer()
 
 async function run() {
     let address = await srv.listenAsync()
-    console.log(
-        `Listening on ${protocol === 'http2' ? 'http' : protocol}://127.0.0.1:${
-            address.port
-        }`
-    )
+    const urlProtocol = {
+        http: 'http',
+        https: 'https',
+        'http2-insecure': 'http',
+        'http2-secure': 'https'
+    }[protocol]
+
+    console.log(`Listening on ${urlProtocol}://127.0.0.1:${address.port}`)
     process.on('SIGTERM', async () => {
         await srv.closeAsync()
         console.log('Server has been shut down')
