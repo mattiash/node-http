@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2019-10-24
+
+Support for http2 servers
+
 ## [1.0.2] - 2019-09-09
 
 ### Bug fixes
 
-- Adjust typings to match tsc changed behaviour
+-   Adjust typings to match tsc changed behaviour
 
 ## [1.0.1] - 2018-11-01
 
