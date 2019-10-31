@@ -26,6 +26,11 @@ export class Http2SecureServer extends tls.Server
         return server
     }
 
+    // This is never actually called
+    setTimeout(_msec: number, _cb: () => void) {
+        return this
+    }
+    
     listenAsync(
         port?: number,
         hostname?: string,

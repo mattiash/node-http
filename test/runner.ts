@@ -1,5 +1,6 @@
 import { spawn, ChildProcess, SpawnOptions } from 'child_process'
 import { ReadLine, createInterface } from 'readline'
+import { Readable } from 'stream'
 
 // tslint:disable no-console
 
@@ -16,12 +17,12 @@ export class Runner {
         this.child = spawn(cmd, args, options)
 
         this.stdout = createInterface({
-            input: this.child.stdout,
+            input: this.child.stdout as Readable,
             terminal: false
         })
 
         this.stderr = createInterface({
-            input: this.child.stderr,
+            input: this.child.stderr as Readable,
             terminal: false
         })
 

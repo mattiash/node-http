@@ -52,6 +52,11 @@ export class Http2Server extends net.Server implements base.Http2Server {
         return this
     }
 
+    // This is never actually called
+    setTimeout(_msec: number, _cb: () => void) {
+        return this
+    }
+
     async closeAsync(): Promise<void> {
         // Close server to deny any new connections
         let closingPromise = new Promise((resolve, reject) =>
