@@ -1,4 +1,4 @@
-import * as test from 'purple-tape'
+import { test } from 'purple-tape'
 import * as got from 'got'
 import { startServer, stopServer, sleep } from './runner'
 

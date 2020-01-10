@@ -1,5 +1,5 @@
 import 'source-map-support/register'
-import * as test from 'purple-tape'
+import { test } from 'purple-tape'
 import * as http2 from 'http2'
 import { URL } from 'url'
 
