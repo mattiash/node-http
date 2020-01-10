@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2020-01-10
+
+-   Fix type of ChildProcess.kill
+-   Use purple-tape 3.0.2
+
 ## [1.1.1] - 2019-10-31
 
 Fix build with @types/node 12.12.3
