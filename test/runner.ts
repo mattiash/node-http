@@ -84,7 +84,7 @@ export class Runner {
         })
     }
 
-    kill(signal: string) {
+    kill(signal: Parameters<ChildProcess['kill']>[0]) {
         this.child.kill(signal)
     }
 }
