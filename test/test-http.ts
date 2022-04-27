@@ -25,6 +25,21 @@ test('close()', async t => {
     })
 })
 
+test('throw an error if listen fails', async t => {
+    const server1 = createHttpServer(() => {})
+    const server2 = createHttpServer(() => {})
+
+    await server1.listenAsync(12345)
+    try {
+        await server2.listenAsync(12345)
+        t.fail('shall throw an error if listen fails')
+    } catch (err) {
+        t.pass('shall throw an error if listen fails')
+    }
+
+    await server1.closeAsync()
+})
+
 test('close without listening', async t => {
     let server = createHttpServer(() => {})
 

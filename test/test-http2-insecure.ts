@@ -82,12 +82,28 @@ test('close()', async t => {
     let server = createHttp2Server({}, () => {})
 
     await server.listenAsync()
-    await new Promise(resolve => {
+    await new Promise<void>(resolve => {
         server.close((err?: Error) => {
             t.ok(!err, 'shall call close-callback without an error')
             resolve()
         })
     })
+})
+
+test('throw an error if listen fails', async t => {
+    const server1 = createHttp2Server({}, () => {})
+    const server2 = createHttp2Server({}, () => {})
+
+    await server1.listenAsync(12345)
+    try {
+        await server2.listenAsync(12345)
+        t.fail('shall throw an error if listen fails')
+    } catch (err) {
+        console.log(err)
+        t.pass('shall throw an error if listen fails')
+    }
+
+    await server1.closeAsync()
 })
 
 test('close without listening', async t => {
@@ -102,7 +118,7 @@ test('close without listening', async t => {
 
     server = createHttp2Server({}, () => {})
 
-    await new Promise(resolve => {
+    await new Promise<void>(resolve => {
         server.close((err?: Error) => {
             t.ok(err, 'shall call close-callback with an error')
             resolve()
