@@ -5,6 +5,21 @@ import { startServer, stopServer, sleep } from './runner'
 // tslint:disable no-console
 
 export function tests(protocol: string, createAgent: () => any) {
+    test('listen to unix socket port', async t => {
+        let agent = createAgent()
+        let server = await startServer('./server.js', protocol + '-unix')
+        let result = await got.get(server.url + '/quick', { agent })
+        let socket = Object.values<any>((agent as any).freeSockets)[0][0]
+        socket.on('close', (hadError: boolean) =>
+            console.log('socket close', hadError)
+        )
+        socket.on('end', () => console.log('socket end'))
+        t.equal(result.body, 'okay')
+        let stopTime = await stopServer(server)
+        console.log(`Took ${stopTime}ms to stop`)
+        t.ok(stopTime < 500, 'server stopped gracefully')
+    })
+
     test('close after quick request', async t => {
         let agent = createAgent()
         let server = await startServer('./server.js', protocol)

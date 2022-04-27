@@ -14,9 +14,13 @@ import { readFileSync } from 'fs'
 
 const protocol = process.argv[2] as
     | 'http'
+    | 'http-unix'
     | 'https'
+    | 'https-unix'
     | 'http2-insecure'
+    | 'http2-insecure-unix'
     | 'http2-secure'
+    | 'http2-secure-unix'
 
 function handler(
     req: http.IncomingMessage | http2.Http2ServerRequest,
@@ -40,8 +44,10 @@ function handler(
 function createServer() {
     switch (protocol) {
         case 'http':
+        case 'http-unix':
             return createHttpServer(handler)
         case 'https':
+        case 'https-unix':
             return createHttpsServer(
                 {
                     key: readFileSync('./server.key'),
@@ -50,8 +56,10 @@ function createServer() {
                 handler
             )
         case 'http2-insecure':
+        case 'http2-insecure-unix':
             return createHttp2Server({}, handler)
         case 'http2-secure':
+        case 'http2-secure-unix':
             return createHttp2SecureServer(
                 {
                     key: readFileSync('./server.key'),
@@ -66,15 +74,27 @@ function createServer() {
 const srv = createServer()
 
 async function run() {
-    let address = await srv.listenAsync()
     const urlProtocol = {
         http: 'http',
+        'http-unix': 'http',
         https: 'https',
+        'https-unix': 'https',
         'http2-insecure': 'http',
-        'http2-secure': 'https'
+        'http2-insecure-unix': 'http',
+        'http2-secure': 'https',
+        'http2-secure-unix': 'https'
     }[protocol]
 
-    console.log(`Listening on ${urlProtocol}://127.0.0.1:${address.port}`)
+    if (protocol.match(/unix/)) {
+        await srv.listenAsync('/tmp/mattiash-node-http')
+        console.log(
+            `Listening on ${urlProtocol}://unix:/tmp/mattiash-node-http:`
+        )
+    } else {
+        let address = await srv.listenAsync()
+        console.log(`Listening on ${urlProtocol}://127.0.0.1:${address.port}`)
+    }
+
     process.on('SIGTERM', async () => {
         await srv.closeAsync()
         console.log('Server has been shut down')

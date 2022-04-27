@@ -38,7 +38,7 @@ export class Http2SecureServer extends tls.Server
     ): Promise<AddressInfo>
     listenAsync(port?: number, hostname?: string): Promise<AddressInfo>
     listenAsync(port?: number, backlog?: number): Promise<AddressInfo>
-    listenAsync(port?: number): Promise<AddressInfo>
+    listenAsync(port?: number | string): Promise<AddressInfo>
     listenAsync(
         port?: number,
         p1?: string | number,
@@ -60,7 +60,7 @@ export class Http2SecureServer extends tls.Server
 
     async closeAsync(): Promise<void> {
         // Close server to deny any new connections
-        let closingPromise = new Promise((resolve, reject) =>
+        let closingPromise = new Promise<void>((resolve, reject) =>
             super.close((err: Error | undefined) =>
                 err ? reject(err) : resolve()
             )

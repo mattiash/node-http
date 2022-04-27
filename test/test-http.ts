@@ -17,7 +17,7 @@ test('close()', async t => {
     let server = createHttpServer(() => {})
 
     await server.listenAsync()
-    await new Promise(resolve => {
+    await new Promise<void>(resolve => {
         server.close((err?: Error) => {
             t.ok(!err, 'shall call close-callback without an error')
             resolve()
@@ -37,7 +37,7 @@ test('close without listening', async t => {
 
     server = createHttpServer(() => {})
 
-    await new Promise(resolve => {
+    await new Promise<void>(resolve => {
         server.close((err?: Error) => {
             t.ok(err, 'shall call close-callback with an error')
             resolve()
